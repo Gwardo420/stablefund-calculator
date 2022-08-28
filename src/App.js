@@ -110,7 +110,7 @@ function App() {
       </div>
 
       <div className="display__amount stable__div">
-        <div className="days__compound display__div">
+        <div className="display__div">
           {cryptoSelectedShow === false && (
             <div>
               Please select either BNB/MATIC or BUSD!
@@ -119,19 +119,25 @@ function App() {
 
           {cryptoSelectedShow === true && (
             <div>
-              {selection} Price: {price}
+              {selection} Price: <span className="days__compound">${price}</span>
             </div>
           )}
 
           {cryptoSelectedShow === true && (
             <div>
-              Potential Earnings: ${resultsAmount - amount}
+              Potential Earnings: <span className="days__compound">${Number(resultsAmount - amount).toFixed(2)} USD</span>
+            </div>
+          )}
+
+          {cryptoSelectedShow === true && (
+            <div>
+              Account Total: <span className="days__compound">${resultsAmount} USD</span>
             </div>
           )}
         </div>
 
         <div className="display__div__total">
-          Initial Deposit: <span className="days__compound">{amount}</span> {selection && (selection)}
+          Initial Deposit: <span className="days__compound">{numeral(amount).format('0,0.00')}</span> {selection && (selection)}
         </div>
 
         <div className="display__div__total">
