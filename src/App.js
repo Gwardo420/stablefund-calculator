@@ -123,11 +123,11 @@ function App() {
             </div>
           )}
 
-          {cryptoSelectedShow === true && (
+          {/* {cryptoSelectedShow === true && (
             <div>
               Potential Earnings: <span className="days__compound">${Number(resultsAmount - amount).toFixed(2)} USD</span>
             </div>
-          )}
+          )} */}
 
           {cryptoSelectedShow === true && (
             <div>
@@ -138,10 +138,22 @@ function App() {
 
         <div className="display__div__total">
           Initial Deposit: <span className="days__compound">{numeral(amount).format('0,0.00')}</span> {selection && (selection)}
+            
+          {cryptoSelectedShow && (
+            <div>
+              ~<span className="days__compound">{Number(numeral(amount).format('0,0.00') * Number(price)).toFixed(2)} USD</span>
+            </div>
+          )}
         </div>
 
         <div className="display__div__total">
           Results: <span className="days__compound">{numeral(results).format('0,0.00')}</span> {selection && (selection)}
+          
+          {cryptoSelectedShow && (
+            <div className="">
+              ~<span className="days__compound">${Number(results * price).toFixed(2)} USD</span>
+            </div>
+          )}
         </div>
 
         <div className="display__div">
