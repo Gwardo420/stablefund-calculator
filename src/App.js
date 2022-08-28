@@ -125,7 +125,7 @@ function App() {
 
           {cryptoSelectedShow === true && (
             <div>
-              Potential Earnings: ${resultsAmount}
+              Potential Earnings: ${resultsAmount - amount}
             </div>
           )}
         </div>
