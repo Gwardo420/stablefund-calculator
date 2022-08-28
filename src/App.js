@@ -97,7 +97,7 @@ function App() {
 
       <div className="stable__div">
         <header className="stable__text">
-          Coumpounds / Day <span className="days__compound">{compoundTimes}</span>
+          Compounds / Day <span className="days__compound">{compoundTimes}</span>
         </header>
 
         <input min="1" max="3" onChange={(e) => setComoundTimes(e.target.value)} className="stable__compound" type={'range'}></input>
