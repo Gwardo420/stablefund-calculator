@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import numeral from 'numeral';
 import logo from './logo.svg';
 import './App.css';
 
 function App() { 
 
   //// COMPOUND LENGTH
-  const [days, setDays] = useState(50);
+  const [days, setDays] = useState(182.5);
   //// DEPOSIT
   const [amount, setAmount] = useState(0);
   //// COMPOUND TIMES
@@ -91,7 +92,7 @@ function App() {
           Compound Days <span className="days__compound">{days}</span>
         </header>
 
-        <input min="0" max="100" onChange={(e) => setDays(e.target.value)} className="stable__compound" type={'range'}></input>
+        <input min="0" max="365" onChange={(e) => setDays(e.target.value)} className="stable__compound" type={'range'}></input>
       </div>
 
       <div className="stable__div">
@@ -134,12 +135,18 @@ function App() {
         </div>
 
         <div className="display__div__total">
-          Results: <span className="days__compound">{results}</span> {selection && (selection)}
+          Results: <span className="days__compound">{numeral(results).format('0,0.00')}</span> {selection && (selection)}
         </div>
 
         <div className="display__div">
           {selection && (selection)} Per Day: <span className="days__compound">{perDay}</span>
         </div>
+
+        {cryptoSelectedShow && (
+          <div className="display__div">
+            USD Per Day: <span className="days__compound">${numeral(perDay * price).format('0,0.00')}</span> @ ${price}/{selection}
+          </div>
+        )}
 
         <div className="display__div">
           Days Compounding: <span className="days__compound">{days} Days</span>
