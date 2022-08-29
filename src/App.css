@@ -142,14 +142,16 @@
 }
 
 .stable__button {
-  padding: 20px;
+  padding: 10px;
   margin: 10px;
   margin-left: 5px;
   margin-right: 5px;
-  background: linear-gradient(125deg, #04AA6D, #212121);
+  background: #7e7e7e;
   border: transparent;
   /* border-radius: 10px; */
   color: white;
+  display: flex;
+  align-items: center;
 }
 
 .stable__button::before,

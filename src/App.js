@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import numeral from 'numeral';
+import Moralis from 'moralis-v1';
 import './App.css';
+
+const serverUrl = "https://tisn7y00c9um.moralisweb3.com:2053/server";
+const appId = "3kTUY5dxjjHAN3TxLXcWmnDHzExfTpmJDSZcvCKj";
 
 function App() { 
 
@@ -23,6 +27,10 @@ function App() {
   const [price, setPrice] = useState(0);
   //// CRYPTO SELECTION
   const [selection, cryptoSelection] = useState("");
+  //// CHAIN SELECTED
+  const [chainSelected, setChainSelected] = useState(false);
+
+  const [chainId, setChainId] = useState("");
 
   useEffect(() => {
     async function calculateReturns() {
@@ -72,6 +80,8 @@ function App() {
 
       cryptoSelection("BNB");
       setPrice(bnbPrice);
+      setChainSelected(true);
+      setChainId("bsc");
     })
   }
 
@@ -83,6 +93,8 @@ function App() {
 
       cryptoSelection("MATIC");
       setPrice(maticPrice);
+      setChainSelected(true);
+      setChainId("0x89");
     })
   }
 
@@ -94,8 +106,145 @@ function App() {
 
       cryptoSelection("BUSD");
       setPrice(busdPrice);
+      setChainSelected(true);
+      setChainId("bsc");
     })
   }
+
+  async function check_contract(wallet_address) {
+    if(!wallet_address)return;
+    if(chainId === "bsc" && selection === "BUSD") {
+      const ABI =  [{
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "name": "investors",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "investor",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalLocked",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastCalculationDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "claimableAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "claimedAmount",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }];
+  
+      const options = {
+        chain: chainId.toString(),
+        address: "0xfBbc24CA5518898fAe0d8455Cb265FaAA66157C9",
+        function_name: "investors",
+        abi: ABI,
+        params: { "": wallet_address.toString() },
+      };
+  
+      try {
+        const allowance = await Moralis.Web3API.native.runContractFunction(options);
+        const investorAddress = await allowance['0']
+        const investorAmount = await allowance['totalLocked']
+  
+        setAmount(investorAmount / Math.pow(10, 18))
+      } catch(err) {
+        console.log(err)
+      }
+    } else if(chainId === "bsc" && selection === "BNB") {
+      const ABI =  [  {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "name": "investors",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "investor",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalLocked",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastCalculationDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "claimableAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "claimedAmount",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }];
+  
+      const options = {
+        chain: chainId.toString(),
+        address: "0x4F2bC1d99C953e0053F5bb9A6855CF7A5CBe66Fa",
+        function_name: "investors",
+        abi: ABI,
+        params: { "": wallet_address.toString() },
+      };
+  
+      try {
+        const allowance = await Moralis.Web3API.native.runContractFunction(options);
+        const investorAddress = await allowance['0']
+        const investorAmount = await allowance['totalLocked']
+  
+        setAmount(investorAmount / Math.pow(10, 18))
+      } catch(err) {
+        console.log(err)
+      }
+    }
+  }
+
+  useEffect(() => {
+    Moralis.start({ serverUrl, appId });
+  }, [])
 
   return (
     <div className="App">
@@ -110,15 +259,27 @@ function App() {
         </div>
       </header>
 
-      <div className="amount__div">
-        <header className="stable__text__header">
-          Total deposited
+      <div className="stable__buttons stable__div">
+        <header className="stable__text__buttons">
+          Select a chain
         </header>
 
-        <input placeholder="1500" type="number" onChange={(e) => change_investment(Number(e.target.value))} className="amount__input"></input>
+        <div style={{ display: 'flex' }}>
+          <button onClick={() => select_bnb()} className="stable__button"><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-97F9D55608-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BNB</button>
+          <button onClick={() => select_busd()} className="stable__button"><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-CD94CC6D31-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BUSD</button>
+          <button disabled={true} onClick={() => select_matic()} className="stable__button"><img src="https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> MATIC</button>
+        </div>
+      </div>
+
+      <div className="amount__div">
+        <header className="stable__text__header">
+          Wallet Address
+        </header>
+
+        <input disabled={!chainSelected} placeholder="0x24bc3..." onChange={(e) => check_contract(e.target.value)} className="amount__input"></input>
       
         <div className="stable__text__small">
-          Values can be BUSD/BNB/MATIC
+          Enter your StableFund wallet address
         </div>
       </div>
 
@@ -143,18 +304,6 @@ function App() {
       
         <div className="stable__text__small">
           The amount of times you plan to compound in a day.
-        </div>
-      </div>
-
-      <div className="stable__buttons stable__div">
-        <header className="stable__text__buttons">
-          Select an investment
-        </header>
-
-        <div style={{ display: 'flex' }}>
-          <button onClick={() => select_bnb()} className="stable__button">BNB</button>
-          <button onClick={() => select_busd()} className="stable__button">BUSD</button>
-          <button onClick={() => select_matic()} className="stable__button">MATIC</button>
         </div>
       </div>
 
