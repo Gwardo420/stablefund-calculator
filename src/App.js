@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import numeral from 'numeral';
-import logo from './logo.svg';
 import './App.css';
 
 function App() { 
@@ -24,8 +23,6 @@ function App() {
   const [price, setPrice] = useState(0);
   //// CRYPTO SELECTION
   const [selection, cryptoSelection] = useState("");
-  //// RESULTS AMOUNT
-  const [resultsAmount, resultsAmountSet] = useState(0);
 
   useEffect(() => {
     async function calculateReturns() {
@@ -43,6 +40,15 @@ function App() {
     }
     calculateReturns();
   }, [days, compoundTimes, amount])
+
+  // useEffect(() => {
+  //   async function get_gas() {
+  //     await axios.get(`https://api.bscscan.com/api?module=gastracker&action=gasoracle&apikey=BTERIVP8C9UTNXDQYIAYUXTVZ7RKRTTHII`).then(async (data) => {
+  //       console.log(data)
+  //     })  
+  //   }
+  //   get_gas()
+  // }, [])
 
   const selection_update = async (selection) => {
     await 1000;
@@ -72,9 +78,9 @@ function App() {
       console.log(coin_gecko_results.data.binancecoin.usd)
       const futureOutcome = results * coin_gecko_results.data.binancecoin.usd;
       const bnbPrice = coin_gecko_results.data.binancecoin.usd;
-      cryptoSelection("BNB")
-      setPrice(bnbPrice)
-      resultsAmountSet(futureOutcome.toFixed(4))
+
+      cryptoSelection("BNB");
+      setPrice(bnbPrice);
     })
   }
 
@@ -83,9 +89,9 @@ function App() {
     await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd').then((coin_gecko_results) => {
       const futureOutcome = results * coin_gecko_results.data['matic-network'].usd;
       const maticPrice = coin_gecko_results.data['matic-network'].usd;
-      cryptoSelection("MATIC")
-      setPrice(maticPrice)
-      resultsAmountSet(futureOutcome.toFixed(4))
+
+      cryptoSelection("MATIC");
+      setPrice(maticPrice);
     })
   }
 
@@ -94,9 +100,9 @@ function App() {
     await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=binance-usd&vs_currencies=usd').then((coin_gecko_results) => {
       const futureOutcome = results * coin_gecko_results.data["binance-usd"].usd;
       const busdPrice = coin_gecko_results.data["binance-usd"].usd;
-      cryptoSelection("BUSD")
-      setPrice(busdPrice)
-      resultsAmountSet(futureOutcome.toFixed(4))
+
+      cryptoSelection("BUSD");
+      setPrice(busdPrice);
     })
   }
 
@@ -150,16 +156,20 @@ function App() {
       </div>
 
       <div className="stable__buttons stable__div">
-        <header className="stable__text">
+        <header className="stable__text__buttons">
           Select an investment
         </header>
 
-        <button onClick={() => select_bnb()} className="stable__button">BNB</button>
-        <button onClick={() => select_busd()} className="stable__button">BUSD</button>
-        <button onClick={() => select_matic()} className="stable__button">MATIC</button>
+        <div style={{ display: 'flex' }}>
+          <button onClick={() => select_bnb()} className="stable__button">BNB</button>
+          <button onClick={() => select_busd()} className="stable__button">BUSD</button>
+          <button onClick={() => select_matic()} className="stable__button">MATIC</button>
+        </div>
       </div>
 
       <div className="display__amount stable__div">
+        <span className="days__compound display__div__text__big">{selection && (<div>Total: {numeral(results).format('0,0.000')} {selection} <div>~ ${numeral(Number(results * price).toFixed(2)).format('0,0.00')} USD</div></div>)}</span>
+
         <div className="display__div">
           {cryptoSelectedShow === false && (
             <div>
@@ -170,12 +180,6 @@ function App() {
           {cryptoSelectedShow === true && (
             <div>
               {selection} Price: <span className="days__compound">${price}</span>
-            </div>
-          )}
-
-          {cryptoSelectedShow === true && (
-            <div>
-              Interest Earned: <span className="days__compound">+${numeral(resultsAmount - amount).format('0,0.00')} USD</span>
             </div>
           )}
         </div>
