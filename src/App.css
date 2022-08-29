@@ -34,7 +34,7 @@
   padding: 5px;
   margin-top: 20px;
   border: 0.125rem white solid;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   box-shadow: 0 0 2rem black;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 20px;
@@ -87,7 +87,7 @@
   padding: 20px;
   margin-top: 20px;
   background: linear-gradient(90deg, #192742, #212121);
-  border-radius: 10px;
+  /* border-radius: 10px; */
 }
 
 .amount__div {
@@ -100,21 +100,39 @@
   padding: 20px;
   background: linear-gradient(90deg, #192742, #212121);
   /* border: 0.025rem white solid; */
-  border-radius: 10px;
+  /* border-radius: 10px; */
   /* box-shadow: 0 0 1rem black; */
 }
 
 .stable__compound {
   max-width: 450px;
   min-width: 250px;
-  background: rgb(74, 74, 124);
+  background: rgba(74, 74, 124, 0.5);
   -webkit-appearance: none;
-  border-radius: 10px;
-  border: 0.125rem white solid;
+  /* border-radius: 10px; */
+}
+
+.stable__compound::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #04AA6D; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.stable__compound::-moz-range-thumb {
+    -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #04AA6D; /* Green background */
+  cursor: pointer; /* Cursor on hover */
 }
 
 .days__compound {
-  color: lime;
+  color: rgb(0, 255, 200);
+  text-shadow: 0 0 0.125rem rgb(0, 255, 200);
   font-weight: bolder;
 }
 
@@ -128,8 +146,9 @@
   margin: 10px;
   margin-left: 5px;
   margin-right: 5px;
-  background: rgb(0, 174, 255);
-  border-radius: 10px;
+  background: linear-gradient(125deg, #04AA6D, #212121);
+  border: transparent;
+  /* border-radius: 10px; */
   color: white;
 }
 

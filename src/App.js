@@ -121,7 +121,7 @@ function App() {
 
       <div className="amount__div">
         <header className="stable__text__header">
-          Total Deposited
+          Total deposited
         </header>
 
         <input placeholder="1500" type="number" onChange={(e) => change_investment(Number(e.target.value))} className="amount__input"></input>
@@ -133,7 +133,7 @@ function App() {
 
       <div className="stable__div">
         <header className="stable__text">
-          Compound Days <span className="days__compound">{days}</span>
+          Compound days <span className="days__compound">{days}</span>
         </header>
 
         <input min="0" max="365" onChange={(e) => change_compound_time(e.target.value)} className="stable__compound" type={'range'}></input>
@@ -145,7 +145,7 @@ function App() {
 
       <div className="stable__div">
         <header className="stable__text">
-          Compounds / Day <span className="days__compound">{compoundTimes}</span>
+          Compounds per day <span className="days__compound">{compoundTimes}</span>
         </header>
 
         <input min="1" max="5" onChange={(e) => setComoundTimes(e.target.value)} className="stable__compound" type={'range'}></input>
@@ -168,7 +168,13 @@ function App() {
       </div>
 
       <div className="display__amount stable__div">
-        <span className="days__compound display__div__text__big">{selection && (<div>Total: {numeral(results).format('0,0.000')} {selection} <div>~ ${numeral(Number(results * price).toFixed(2)).format('0,0.00')} USD</div></div>)}</span>
+        <span className="days__compound display__div__text__big">{selection && (
+          <div>Total: {numeral(results).format('0,0.000')} {selection} 
+            <div className="stable__text__small">after {days} days of compounding {compoundTimes} time(s)/day.</div>
+            <div>~ ${numeral(Number(results * price).toFixed(2)).format('0,0.00')} USD</div>
+          </div>
+        )}
+        </span>
 
         <div className="display__div">
           {cryptoSelectedShow === false && (
@@ -203,10 +209,14 @@ function App() {
             </div>
           )}
         </div>
-
-        <div className="display__div">
-          {selection && (selection)} Per Day: <span className="days__compound">{perDay}</span> @ ${price}/{selection}
-        </div>
+          
+        {selection && (
+          <>
+            <div className="display__div">
+              {selection && (<div>{selection} Per Day: <span className="days__compound">{perDay}</span></div>)}
+            </div>
+          </>
+        )}
 
         {cryptoSelectedShow && (
           <div className="display__div">
