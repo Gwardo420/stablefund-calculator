@@ -185,7 +185,7 @@ function App() {
           
           {cryptoSelectedShow && (
             <div className="">
-              ~<span className="days__compound">${Number(results * price).toFixed(2)} USD</span>
+              ~<span className="days__compound">${Number(results * price).toFixed(2)} USD</span> @ ${price}/{selection}
             </div>
           )}
         </div>
