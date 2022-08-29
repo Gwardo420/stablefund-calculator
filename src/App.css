@@ -40,6 +40,18 @@
   font-size: 20px;
 }
 
+.amount__input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.stable__text__small {
+  font-size: 13px;
+  text-align: center;
+  color: white;
+  padding: 10px;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
 .stable__text {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 20px;
@@ -112,6 +124,7 @@
   color: white;
 }
 
+.stable__button::before,
 .stable__button:hover {
   color: white;
   transform: scale(1.1);

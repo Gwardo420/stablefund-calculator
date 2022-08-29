@@ -11,7 +11,7 @@ function App() {
   //// DEPOSIT
   const [amount, setAmount] = useState(0);
   //// COMPOUND TIMES
-  const [compoundTimes, setComoundTimes] = useState(2);
+  const [compoundTimes, setComoundTimes] = useState(2.5);
   //// RESULTS
   const [results, setResults] = useState(0);
   //// RESULTS PER DAY
@@ -29,15 +29,42 @@ function App() {
 
   useEffect(() => {
     async function calculateReturns() {
+      // Compounding formula example 
       //At = $1,000 × (1 + 6%)2 = $1,123.60
-      const results = Number(amount) * (1 + 0.015*Number(compoundTimes))**Number(days);
-      const per_day = 0.015 * results;
+
+      const results = Number(amount) * (1 + 0.01455 * Number(compoundTimes)) ** Number(days);
+      const per_day = 0.015 * Number(results);
+
       setResults(Number(results).toFixed(6));
-      setPerDay(Number(per_day).toFixed(6));
-      setInterval(24/compoundTimes);
+      setPerDay(numeral(per_day).format('0,0.0000'));
+      setInterval(24 / compoundTimes);
+
+      selection_update(selection.toString());
     }
     calculateReturns();
   }, [days, compoundTimes, amount])
+
+  const selection_update = async (selection) => {
+    await 1000;
+    if(selection.toUpperCase() === "BNB") {
+      await select_bnb()
+    } else if(selection.toUpperCase()  === "MATIC") {
+      await select_matic()
+    } else if(selection.toUpperCase()  === "BUSD") {
+      await select_busd()
+    } else return;
+  }
+
+  const change_investment = (amount) => {
+    const after_taxes = Number(amount) * 0.03;
+    const results = amount - after_taxes;
+    setAmount(results);
+  }
+
+  const change_compound_time = async (amount) => {
+    setDays(amount)
+    setTimeout(1000)
+  }
 
   async function select_bnb() {
     cryptoSelected(true)
@@ -47,7 +74,7 @@ function App() {
       const bnbPrice = coin_gecko_results.data.binancecoin.usd;
       cryptoSelection("BNB")
       setPrice(bnbPrice)
-      resultsAmountSet(futureOutcome.toFixed(2))
+      resultsAmountSet(futureOutcome.toFixed(4))
     })
   }
 
@@ -58,7 +85,7 @@ function App() {
       const maticPrice = coin_gecko_results.data['matic-network'].usd;
       cryptoSelection("MATIC")
       setPrice(maticPrice)
-      resultsAmountSet(futureOutcome.toFixed(2))
+      resultsAmountSet(futureOutcome.toFixed(4))
     })
   }
 
@@ -69,7 +96,7 @@ function App() {
       const busdPrice = coin_gecko_results.data["binance-usd"].usd;
       cryptoSelection("BUSD")
       setPrice(busdPrice)
-      resultsAmountSet(futureOutcome.toFixed(2))
+      resultsAmountSet(futureOutcome.toFixed(4))
     })
   }
 
@@ -77,6 +104,13 @@ function App() {
     <div className="App">
       <header className="App-header">
         StableFund Compound Calculator
+
+        <div className="stable__text__small">
+          Currently in <span>BETA</span>
+          <div>
+            Created by Gwardo420
+          </div>
+        </div>
       </header>
 
       <div className="amount__div">
@@ -84,7 +118,11 @@ function App() {
           Total Deposited
         </header>
 
-        <input onChange={(e) => setAmount(e.target.value)} className="amount__input"></input>
+        <input placeholder="1500" type="number" onChange={(e) => change_investment(Number(e.target.value))} className="amount__input"></input>
+      
+        <div className="stable__text__small">
+          Values can be BUSD/BNB/MATIC
+        </div>
       </div>
 
       <div className="stable__div">
@@ -92,7 +130,11 @@ function App() {
           Compound Days <span className="days__compound">{days}</span>
         </header>
 
-        <input min="0" max="365" onChange={(e) => setDays(e.target.value)} className="stable__compound" type={'range'}></input>
+        <input min="0" max="365" onChange={(e) => change_compound_time(e.target.value)} className="stable__compound" type={'range'}></input>
+      
+        <div className="stable__text__small">
+          The amount of days you would like to compound.
+        </div>
       </div>
 
       <div className="stable__div">
@@ -100,10 +142,18 @@ function App() {
           Compounds / Day <span className="days__compound">{compoundTimes}</span>
         </header>
 
-        <input min="1" max="3" onChange={(e) => setComoundTimes(e.target.value)} className="stable__compound" type={'range'}></input>
+        <input min="1" max="5" onChange={(e) => setComoundTimes(e.target.value)} className="stable__compound" type={'range'}></input>
+      
+        <div className="stable__text__small">
+          The amount of times you plan to compound in a day.
+        </div>
       </div>
 
-      <div className="stable__buttons">
+      <div className="stable__buttons stable__div">
+        <header className="stable__text">
+          Select an investment
+        </header>
+
         <button onClick={() => select_bnb()} className="stable__button">BNB</button>
         <button onClick={() => select_busd()} className="stable__button">BUSD</button>
         <button onClick={() => select_matic()} className="stable__button">MATIC</button>
@@ -123,31 +173,15 @@ function App() {
             </div>
           )}
 
-          {/* {cryptoSelectedShow === true && (
-            <div>
-              Potential Earnings: <span className="days__compound">${Number(resultsAmount - amount).toFixed(2)} USD</span>
-            </div>
-          )} */}
-
           {cryptoSelectedShow === true && (
             <div>
-              Account Total: <span className="days__compound">${resultsAmount} USD</span>
+              Interest Earned: <span className="days__compound">+${numeral(resultsAmount - amount).format('0,0.00')} USD</span>
             </div>
           )}
         </div>
 
         <div className="display__div__total">
-          Initial Deposit: <span className="days__compound">{numeral(amount).format('0,0.00')}</span> {selection && (selection)}
-            
-          {cryptoSelectedShow && (
-            <div>
-              ~<span className="days__compound">{Number(amount * Number(price)).toFixed(2)} USD</span>
-            </div>
-          )}
-        </div>
-
-        <div className="display__div__total">
-          Results: <span className="days__compound">{numeral(results).format('0,0.00')}</span> {selection && (selection)}
+          Future Value: <span className="days__compound">{numeral(results).format('0,0.00')}</span> {selection && (selection)}
           
           {cryptoSelectedShow && (
             <div className="">
@@ -156,13 +190,23 @@ function App() {
           )}
         </div>
 
+        <div className="display__div__total">
+          Initial Deposit: <span className="days__compound">{numeral(Number(amount)).format('0,0.00')}</span> {selection && (selection)} after 3%.
+            
+          {cryptoSelectedShow && (
+            <div>
+              ~<span className="days__compound">{Number(amount * Number(price)).toFixed(2)} USD</span> @ ${price}/{selection}
+            </div>
+          )}
+        </div>
+
         <div className="display__div">
-          {selection && (selection)} Per Day: <span className="days__compound">{perDay}</span>
+          {selection && (selection)} Per Day: <span className="days__compound">{perDay}</span> @ ${price}/{selection}
         </div>
 
         {cryptoSelectedShow && (
           <div className="display__div">
-            USD Per Day: <span className="days__compound">${numeral(perDay * price).format('0,0.00')}</span> @ ${price}/{selection}
+            USD Per Day: <span className="days__compound">${numeral(perDay * price).format('0,0.0000')}</span> @ ${price}/{selection}
           </div>
         )}
 
