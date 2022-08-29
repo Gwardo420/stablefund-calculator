@@ -41,15 +41,6 @@ function App() {
     calculateReturns();
   }, [days, compoundTimes, amount])
 
-  // useEffect(() => {
-  //   async function get_gas() {
-  //     await axios.get(`https://api.bscscan.com/api?module=gastracker&action=gasoracle&apikey=BTERIVP8C9UTNXDQYIAYUXTVZ7RKRTTHII`).then(async (data) => {
-  //       console.log(data)
-  //     })  
-  //   }
-  //   get_gas()
-  // }, [])
-
   const selection_update = async (selection) => {
     await 1000;
     if(selection.toUpperCase() === "BNB") {
