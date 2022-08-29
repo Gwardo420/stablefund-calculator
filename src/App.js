@@ -61,9 +61,9 @@ function App() {
   }
 
   const change_investment = (amount) => {
-    const after_taxes = Number(amount) * 0.03;
-    const results = amount - after_taxes;
-    setAmount(results);
+    // const after_taxes = Number(amount) * 0.03;
+    // const results = amount - after_taxes;
+    setAmount(amount);
   }
 
   const change_compound_time = async (amount) => {
@@ -343,7 +343,7 @@ function App() {
         </div>
 
         <div className="display__div__total">
-          Initial Deposit: <span className="days__compound">{numeral(Number(amount)).format('0,0.00')}</span> {selection && (selection)} after 3%.
+          Initial Deposit: <span className="days__compound">{numeral(Number(amount)).format('0,0.00')}</span> {selection && (selection)}
             
           {cryptoSelectedShow && (
             <div>
