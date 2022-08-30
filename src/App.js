@@ -14,7 +14,7 @@ function App() {
   //// DEPOSIT
   const [amount, setAmount] = useState(0);
   //// COMPOUND TIMES
-  const [compoundTimes, setComoundTimes] = useState(2.5);
+  const [compoundTimes, setComoundTimes] = useState(2);
   //// RESULTS
   const [results, setResults] = useState(0);
   //// RESULTS PER DAY
@@ -113,6 +113,7 @@ function App() {
 
   async function check_contract(wallet_address) {
     if(!wallet_address)return;
+    if(wallet_address.length !== 42)return;
     if(chainId === "bsc" && selection === "BUSD") {
       const ABI =  [{
         "inputs": [
@@ -169,8 +170,8 @@ function App() {
   
       try {
         const allowance = await Moralis.Web3API.native.runContractFunction(options);
-        const investorAddress = await allowance['0']
-        const investorAmount = await allowance['totalLocked']
+        const investorAmount = await allowance['totalLocked'];
+        console.log(allowance);
   
         setAmount(investorAmount / Math.pow(10, 18))
       } catch(err) {
@@ -232,9 +233,9 @@ function App() {
   
       try {
         const allowance = await Moralis.Web3API.native.runContractFunction(options);
-        const investorAddress = await allowance['0']
-        const investorAmount = await allowance['totalLocked']
-  
+        const investorAmount = await allowance['totalLocked'];
+        console.log(allowance);
+
         setAmount(investorAmount / Math.pow(10, 18))
       } catch(err) {
         console.log(err)
@@ -302,7 +303,7 @@ function App() {
           Compounds per day <span className="days__compound">{compoundTimes}</span>
         </header>
 
-        <input min="1" max="5" onChange={(e) => setComoundTimes(e.target.value)} className="stable__compound" type={'range'}></input>
+        <input min="1" max="3" onChange={(e) => setComoundTimes(e.target.value)} className="stable__compound" type={'range'}></input>
       
         <div className="stable__text__small">
           The amount of times you plan to compound in a day.
@@ -310,59 +311,55 @@ function App() {
       </div>
 
       <div className="display__amount stable__div">
-        <span className="days__compound display__div__text__big">{selection && (
-          <div>Total: {numeral(results).format('0,0.000')} {selection} 
-            <div className="stable__text__small">after {days} days of compounding {compoundTimes} time(s)/day.</div>
-            <div>~ ${numeral(Number(results * price).toFixed(2)).format('0,0.00')} USD</div>
+        {cryptoSelectedShow === true && (
+          <div className="display__div">
+            {selection} Price: <span className="days__compound">${price}</span>
           </div>
         )}
-        </span>
 
-        <div className="display__div">
-          {cryptoSelectedShow === false && (
-            <div>
-              Please select either BNB/MATIC or BUSD!
+        {cryptoSelectedShow === true && (
+          <>
+            <div className="display__div"> 
+              Staked: <span className="days__compound">{numeral(Number(amount)).format('0,0.00')} {selection && (selection)}</span>
             </div>
-          )}
 
-          {cryptoSelectedShow === true && (
-            <div>
-              {selection} Price: <span className="days__compound">${price}</span>
+            <div className="display__div">
+              Staked Value: <span className="days__compound">(${Number(amount * Number(price)).toFixed(2)} USD)</span>
             </div>
-          )}
-        </div>
 
-        <div className="display__div__total">
-          Future Value: <span className="days__compound">{numeral(results).format('0,0.00')}</span> {selection && (selection)}
-          
-          {cryptoSelectedShow && (
-            <div className="">
-              ~<span className="days__compound">${Number(results * price).toFixed(2)} USD</span> @ ${price}/{selection}
+            <div className="display__div">
+              Compound Results: <span className="days__compound">{numeral(results).format('0,0.000')} {selection}</span>
             </div>
-          )}
-        </div>
 
-        <div className="display__div__total">
-          Initial Deposit: <span className="days__compound">{numeral(Number(amount)).format('0,0.00')}</span> {selection && (selection)}
-            
-          {cryptoSelectedShow && (
-            <div>
-              ~<span className="days__compound">{Number(amount * Number(price)).toFixed(2)} USD</span> @ ${price}/{selection}
+            <div className="display__div">
+              Compound Value: <span className="days__compound">(${numeral(Number(results * price).toFixed(2)).format('0,0.00')} USD)</span>
             </div>
-          )}
-        </div>
-          
+          </>
+        )}
+
+        {cryptoSelectedShow === false && (
+          <div className="display__div__text__big display__div">
+            Please select either BNB/MATIC or BUSD!
+          </div>
+        )}
+
+        {cryptoSelectedShow && (
+          <div className="display__div">
+            USD Value: <span className="days__compound">${Number(results * price).toFixed(2)}</span>
+          </div>
+        )}
+
         {selection && (
           <>
             <div className="display__div">
-              {selection && (<div>{selection} Per Day: <span className="days__compound">{perDay}</span></div>)}
+             <span>{selection} Per Day:</span> <span className="days__compound">{perDay}</span>
             </div>
           </>
         )}
 
         {cryptoSelectedShow && (
           <div className="display__div">
-            USD Per Day: <span className="days__compound">${numeral(perDay * price).format('0,0.0000')}</span> @ ${price}/{selection}
+            USD Per Day: <span className="days__compound">${numeral(perDay * price).format('0,0.0000')}</span>
           </div>
         )}
 
@@ -371,12 +368,12 @@ function App() {
         </div>
 
         <div className="display__div">
-          Compound Interval: <span className="days__compound">{interval} hours</span>
+          Compound Interval: <div className="days__compound">{interval} hours</div>
         </div>
       </div>
 
       <div className="stable__div">
-        <div className="days__compound">
+        <div className="stable__text__small" style={{ color: 'red' }}>
           Gas Prices Coming Soon!
         </div>
       </div>
