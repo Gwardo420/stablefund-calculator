@@ -346,7 +346,7 @@ function App() {
             </div>
 
             <div className="display__div">
-              Staked Value: <span className="days__compound">${Number(amount * Number(price)).toFixed(2)} USD</span>
+              Staked Value: <span className="days__compound">${Number(amount * Number(price)).toFixed(4)} USD</span>
             </div>
 
             <div className="display__div">
