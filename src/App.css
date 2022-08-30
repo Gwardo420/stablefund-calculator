@@ -172,7 +172,6 @@
   display: grid;
   justify-content: center;
   align-items: center;
-  font-size: 25px;
   color: white;
   padding-top: 30px;
   padding-bottom: 30px;
@@ -238,4 +237,37 @@
 .display__div__text__big {
   color: yellow;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.creator_image {
+  box-shadow: 0 0 1rem rgb(0, 255, 200);
+}
+
+.creator_image:hover {
+  animation: heart-beat 2s infinite;
+}
+
+@keyframes heart-beat {
+  0% {
+    box-shadow: 0 0 .5rem rgb(0, 255, 200);
+  }
+
+  100% {
+    box-shadow: 0 0 1rem rgb(0, 255, 200);
+  }
+}
+
+.social_tag {
+  color: white;
+  padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.social_tag:hover {
+  margin-left: auto;
+  margin-right: auto;
+  color: black;
+  background: rgb(190, 190, 190);
+  padding: 10px;
 }
