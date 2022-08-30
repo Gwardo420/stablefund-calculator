@@ -29,6 +29,8 @@ function App() {
   const [selection, cryptoSelection] = useState("");
   //// CHAIN SELECTED
   const [chainSelected, setChainSelected] = useState(false);
+  //// DIFFERENCE
+  const [difference, setDifference] = useState(0);
 
   const [chainId, setChainId] = useState("");
 
@@ -39,8 +41,10 @@ function App() {
 
       const results = Number(amount) * (1 + 0.01455 * Number(compoundTimes)) ** Number(days);
       const per_day = 0.015 * Number(results);
+      const difference = Number(results) - Number(amount);
 
       setResults(Number(results).toFixed(6));
+      setDifference(difference.toFixed(2));
       setPerDay(numeral(per_day).format('0,0.0000'));
       setInterval(24 / compoundTimes);
 
@@ -114,124 +118,124 @@ function App() {
   async function check_contract(wallet_address) {
     if(!wallet_address)return;
     if(wallet_address.length !== 42)return;
-    if(chainId === "bsc" && selection === "BUSD") {
-      const ABI =  [{
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "name": "investors",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "investor",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "totalLocked",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startTime",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "lastCalculationDate",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "claimableAmount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "claimedAmount",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      }];
-  
-      const options = {
-        chain: chainId.toString(),
-        address: "0xfBbc24CA5518898fAe0d8455Cb265FaAA66157C9",
-        function_name: "investors",
-        abi: ABI,
-        params: { "": wallet_address.toString() },
-      };
-  
+    if(chainId === "bsc" && selection === "BUSD") { 
       try {
+        const ABI =  [{
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "investors",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "investor",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalLocked",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lastCalculationDate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "claimableAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "claimedAmount",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }];
+    
+        const options = {
+          chain: chainId.toString(),
+          address: "0xfBbc24CA5518898fAe0d8455Cb265FaAA66157C9",
+          function_name: "investors",
+          abi: ABI,
+          params: { "": wallet_address.toString() },
+        };
+
         const allowance = await Moralis.Web3API.native.runContractFunction(options);
         const investorAmount = await allowance['totalLocked'];
         console.log(allowance);
   
-        setAmount(investorAmount / Math.pow(10, 18))
+        setAmount(investorAmount / Math.pow(10, 18));
       } catch(err) {
-        console.log(err)
+        console.log(err);
       }
-    } else if(chainId === "bsc" && selection === "BNB") {
-      const ABI =  [  {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "name": "investors",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "investor",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "totalLocked",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startTime",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "lastCalculationDate",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "claimableAmount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "claimedAmount",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      }];
-  
-      const options = {
-        chain: chainId.toString(),
-        address: "0x4F2bC1d99C953e0053F5bb9A6855CF7A5CBe66Fa",
-        function_name: "investors",
-        abi: ABI,
-        params: { "": wallet_address.toString() },
-      };
-  
+    } else if(chainId === "bsc" && selection === "BNB") {  
       try {
+        const ABI =  [  {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "name": "investors",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "investor",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalLocked",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "startTime",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lastCalculationDate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "claimableAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "claimedAmount",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }];
+    
+        const options = {
+          chain: chainId.toString(),
+          address: "0x4F2bC1d99C953e0053F5bb9A6855CF7A5CBe66Fa",
+          function_name: "investors",
+          abi: ABI,
+          params: { "": wallet_address.toString() },
+        };
+
         const allowance = await Moralis.Web3API.native.runContractFunction(options);
         const investorAmount = await allowance['totalLocked'];
         console.log(allowance);
@@ -255,7 +259,7 @@ function App() {
         <div className="stable__text__small">
           Currently in <span>BETA</span>
           <div>
-            Created by Gwardo420
+            Created by <a href="https://www.twitter.com/devgwardo">Gwardo420</a>
           </div>
         </div>
       </header>
@@ -311,6 +315,12 @@ function App() {
       </div>
 
       <div className="display__amount stable__div">
+        {cryptoSelectedShow === true && (
+          <div className="display__div">
+            Earnings: <span className="days__compound">{difference} {selection}</span>
+          </div>
+        )}
+
         {cryptoSelectedShow === true && (
           <div className="display__div">
             {selection} Price: <span className="days__compound">${price}</span>
