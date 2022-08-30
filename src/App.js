@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import numeral from 'numeral';
 import Moralis from 'moralis-v1';
+import Marquee from "react-fast-marquee";
 import './App.css';
 
 const serverUrl = "https://tisn7y00c9um.moralisweb3.com:2053/server";
@@ -31,30 +32,15 @@ function App() {
   const [chainSelected, setChainSelected] = useState(false);
   //// DIFFERENCE
   const [difference, setDifference] = useState(0);
-
+  //// SETTING CHAIN ID FOR WALLET
   const [chainId, setChainId] = useState("");
 
-  useEffect(() => {
-    async function calculateReturns() {
-      // Compounding formula example 
-      //At = $1,000 × (1 + 6%)2 = $1,123.60
-
-      const results = Number(amount) * (1 + 0.01455 * Number(compoundTimes)) ** Number(days);
-      const per_day = 0.015 * Number(results);
-      const difference = Number(results) - Number(amount);
-
-      setResults(Number(results).toFixed(6));
-      setDifference(difference.toFixed(2));
-      setPerDay(numeral(per_day).format('0,0.0000'));
-      setInterval(24 / compoundTimes);
-
-      selection_update(selection.toString());
-    }
-    calculateReturns();
-  }, [days, compoundTimes, amount])
+  //// COIN PRICES
+  const [bnbPrice, setBNBPrice] = useState(0);
+  const [maticPrice, setMaticPrice] = useState(0);
+  const [busdPrice, setBUSDPrice] = useState(0);
 
   const selection_update = async (selection) => {
-    await 1000;
     if(selection.toUpperCase() === "BNB") {
       await select_bnb()
     } else if(selection.toUpperCase()  === "MATIC") {
@@ -64,10 +50,21 @@ function App() {
     } else return;
   }
 
-  const change_investment = (amount) => {
-    // const after_taxes = Number(amount) * 0.03;
-    // const results = amount - after_taxes;
-    setAmount(amount);
+  async function get_prices() {
+    await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd').then((coin_gecko_results) => {
+      console.log(coin_gecko_results.data.binancecoin.usd)
+      setBNBPrice(coin_gecko_results.data.binancecoin.usd)
+    })
+
+    await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd').then((coin_gecko_results) => {
+      console.log(coin_gecko_results.data['matic-network'].usd)
+      setMaticPrice(coin_gecko_results.data['matic-network'].usd)
+    })
+
+    await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=binance-usd&vs_currencies=usd').then((coin_gecko_results) => {
+      console.log(coin_gecko_results.data['binance-usd'].usd)
+      setBUSDPrice(coin_gecko_results.data['binance-usd'].usd)
+    })
   }
 
   const change_compound_time = async (amount) => {
@@ -172,11 +169,8 @@ function App() {
           abi: ABI,
           params: { "": wallet_address.toString() },
         };
-
         const allowance = await Moralis.Web3API.native.runContractFunction(options);
         const investorAmount = await allowance['totalLocked'];
-        console.log(allowance);
-  
         setAmount(investorAmount / Math.pow(10, 18));
       } catch(err) {
         console.log(err);
@@ -235,11 +229,8 @@ function App() {
           abi: ABI,
           params: { "": wallet_address.toString() },
         };
-
         const allowance = await Moralis.Web3API.native.runContractFunction(options);
         const investorAmount = await allowance['totalLocked'];
-        console.log(allowance);
-
         setAmount(investorAmount / Math.pow(10, 18))
       } catch(err) {
         console.log(err)
@@ -249,20 +240,46 @@ function App() {
 
   useEffect(() => {
     Moralis.start({ serverUrl, appId });
-  }, [])
+    get_prices();
+  }, []);
+
+  useEffect(() => {
+    async function calculateReturns() {
+      // Compounding formula example
+      //At = $1,000 × (1 + 6%)2 = $1,123.60
+      const results = Number(amount) * (1 + 0.01455 * Number(compoundTimes)) ** Number(days);
+      const per_day = 0.015 * Number(results);
+      const difference = Number(results) - Number(amount);
+
+      setResults(Number(results).toFixed(6));
+      setDifference(difference.toFixed(2));
+      setPerDay(numeral(per_day).format('0,0.0000'));
+      setInterval(24 / compoundTimes);
+      selection_update(selection.toString());
+    }
+    calculateReturns();
+  }, [days, compoundTimes, amount, selection])
 
   return (
     <div className="App">
-      <header className="App-header">
+      <header className="App-header" style={{ paddingTop: '30px '}}>
         StableFund Compound Calculator
 
-        <div className="stable__text__small">
+        <div className="stable__text__small" style={{ marginTop: '20px' }}>
           Currently in <span>BETA</span>
           <div>
             Created by <a href="https://www.twitter.com/devgwardo">Gwardo420</a>
           </div>
         </div>
       </header>
+
+      <Marquee pauseOnHover={true} gradient={false} speed={50}>
+        <div className="display__div__prices">
+          <span className="days__compound" style={{ color: 'lightblue' }}><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-97F9D55608-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BNB ${bnbPrice}</span> 
+          <span className="days__compound" style={{ color: 'lightblue' }}><img src="https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> MATIC ${maticPrice}</span>
+          <span className="days__compound" style={{ color: 'lightblue' }}><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-CD94CC6D31-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BUSD ${busdPrice}</span>
+        </div>
+      </Marquee>
 
       <div className="stable__buttons stable__div">
         <header className="stable__text__buttons">
