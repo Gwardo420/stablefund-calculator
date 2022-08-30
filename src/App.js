@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import numeral from 'numeral';
 import Moralis from 'moralis-v1';
@@ -9,6 +9,7 @@ const serverUrl = "https://tisn7y00c9um.moralisweb3.com:2053/server";
 const appId = "3kTUY5dxjjHAN3TxLXcWmnDHzExfTpmJDSZcvCKj";
 
 function App() { 
+  const wallet_address_input = useRef()
 
   //// COMPOUND LENGTH
   const [days, setDays] = useState(182.5);
@@ -34,6 +35,8 @@ function App() {
   const [difference, setDifference] = useState(0);
   //// SETTING CHAIN ID FOR WALLET
   const [chainId, setChainId] = useState("");
+  //// USERS WALLET ADDRESS
+  const [usersWallet, setUsersWallet] = useState("");
 
   //// COIN PRICES
   const [bnbPrice, setBNBPrice] = useState(0);
@@ -80,43 +83,32 @@ function App() {
 
   async function select_bnb() {
     cryptoSelected(true)
-    // await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd').then((coin_gecko_results) => {
-      const futureOutcome = results * bnbPrice;
-
-      cryptoSelection("BNB");
-      setPrice(bnbPrice);
-      setChainSelected(true);
-      setChainId("bsc");
-    // })
+    cryptoSelection("BNB");
+    setPrice(bnbPrice);
+    setChainSelected(true);
+    setChainId("bsc");
   }
 
   async function select_matic() {
     cryptoSelected(true)
-    // await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd').then((coin_gecko_results) => {
-      const futureOutcome = results * maticPrice;
-
-      cryptoSelection("MATIC");
-      setPrice(maticPrice);
-      setChainSelected(true);
-      setChainId("0x89");
-    // })
+    cryptoSelection("MATIC");
+    setPrice(maticPrice);
+    setChainSelected(true);
+    setChainId("0x89");
   }
 
   async function select_busd() {
     cryptoSelected(true)
-    // await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=binance-usd&vs_currencies=usd').then((coin_gecko_results) => {
-      const futureOutcome = results * busdPrice;
-
-      cryptoSelection("BUSD");
-      setPrice(busdPrice);
-      setChainSelected(true);
-      setChainId("bsc");
-    // })
+    cryptoSelection("BUSD");
+    setPrice(busdPrice);
+    setChainSelected(true);
+    setChainId("bsc");
   }
 
   async function check_contract(wallet_address) {
     if(!wallet_address)return;
     if(wallet_address.length !== 42)return;
+    setUsersWallet(wallet_address)
     if(chainId === "bsc" && selection === "BUSD") { 
       try {
         const ABI =  [{
@@ -254,7 +246,7 @@ function App() {
       const difference = Number(results) - Number(amount);
 
       setResults(Number(results).toFixed(6));
-      setDifference(difference.toFixed(2));
+      setDifference(difference.toFixed(6));
       setPerDay(numeral(per_day).format('0,0.0000'));
       setInterval(24 / compoundTimes);
       selection_update(selection.toString());
@@ -303,7 +295,7 @@ function App() {
           Wallet Address
         </header>
 
-        <input disabled={!chainSelected} placeholder="0x24bc3..." onChange={(e) => check_contract(e.target.value)} className="amount__input"></input>
+        <input disabled={!chainSelected} ref={wallet_address_input} placeholder="0x24bc3..." onChange={(e) => check_contract(e.target.value)} className="amount__input"></input>
       
         <div className="stable__text__small">
           Enter your StableFund wallet address
@@ -350,7 +342,7 @@ function App() {
         {cryptoSelectedShow === true && (
           <>
             <div className="display__div"> 
-              Staked: <span className="days__compound">{numeral(Number(amount)).format('0,0.00')} {selection && (selection)}</span>
+              Staked: <span className="days__compound">{numeral(Number(amount)).format('0,0.0000')} {selection && (selection)}</span>
             </div>
 
             <div className="display__div">
@@ -358,7 +350,7 @@ function App() {
             </div>
 
             <div className="display__div">
-              Compound Results: <span className="days__compound">{numeral(results).format('0,0.000')} {selection}</span>
+              Compound Results: <span className="days__compound">{numeral(results).format('0,0.0000')} {selection}</span>
             </div>
 
             <div className="display__div">
