@@ -332,13 +332,7 @@ function App() {
             Earnings: <span className="days__compound">{numeral(difference).format('0,0.000000')} {selection}</span>
           </div>
         )}
-
-        {cryptoSelectedShow === true && (
-          <div className="display__div">
-            {selection} Price: <span className="days__compound">${price}</span>
-          </div>
-        )}
-
+        
         {cryptoSelectedShow === true && (
           <>
             <div className="display__div"> 
