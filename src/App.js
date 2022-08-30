@@ -80,42 +80,38 @@ function App() {
 
   async function select_bnb() {
     cryptoSelected(true)
-    await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd').then((coin_gecko_results) => {
-      console.log(coin_gecko_results.data.binancecoin.usd)
-      const futureOutcome = results * coin_gecko_results.data.binancecoin.usd;
-      const bnbPrice = coin_gecko_results.data.binancecoin.usd;
+    // await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd').then((coin_gecko_results) => {
+      const futureOutcome = results * bnbPrice;
 
       cryptoSelection("BNB");
       setPrice(bnbPrice);
       setChainSelected(true);
       setChainId("bsc");
-    })
+    // })
   }
 
   async function select_matic() {
     cryptoSelected(true)
-    await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd').then((coin_gecko_results) => {
-      const futureOutcome = results * coin_gecko_results.data['matic-network'].usd;
-      const maticPrice = coin_gecko_results.data['matic-network'].usd;
+    // await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd').then((coin_gecko_results) => {
+      const futureOutcome = results * maticPrice;
 
       cryptoSelection("MATIC");
       setPrice(maticPrice);
       setChainSelected(true);
       setChainId("0x89");
-    })
+    // })
   }
 
   async function select_busd() {
     cryptoSelected(true)
-    await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=binance-usd&vs_currencies=usd').then((coin_gecko_results) => {
-      const futureOutcome = results * coin_gecko_results.data["binance-usd"].usd;
-      const busdPrice = coin_gecko_results.data["binance-usd"].usd;
+    // await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=binance-usd&vs_currencies=usd').then((coin_gecko_results) => {
+      const futureOutcome = results * busdPrice;
 
       cryptoSelection("BUSD");
       setPrice(busdPrice);
       setChainSelected(true);
       setChainId("bsc");
-    })
+    // })
   }
 
   async function check_contract(wallet_address) {
