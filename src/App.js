@@ -329,7 +329,7 @@ function App() {
       <div className="display__amount stable__div">
         {cryptoSelectedShow === true && (
           <div className="display__div">
-            Earnings: <span className="days__compound">{difference} {selection}</span>
+            Earnings: <span className="days__compound">{numeral(difference).format('0,0.000000')} {selection}</span>
           </div>
         )}
 
@@ -346,15 +346,15 @@ function App() {
             </div>
 
             <div className="display__div">
-              Staked Value: <span className="days__compound">(${Number(amount * Number(price)).toFixed(2)} USD)</span>
+              Staked Value: <span className="days__compound">${Number(amount * Number(price)).toFixed(2)} USD</span>
             </div>
 
             <div className="display__div">
-              Compound Results: <span className="days__compound">{numeral(results).format('0,0.0000')} {selection}</span>
+              Compound Total: <span className="days__compound">{numeral(results).format('0,0.0000')} {selection}</span>
             </div>
 
             <div className="display__div">
-              Compound Value: <span className="days__compound">(${numeral(Number(results * price).toFixed(2)).format('0,0.00')} USD)</span>
+              Compound Value: <span className="days__compound">${numeral(Number(results * price).toFixed(2)).format('0,0.00')} USD</span>
             </div>
           </>
         )}
@@ -362,12 +362,6 @@ function App() {
         {cryptoSelectedShow === false && (
           <div className="display__div__text__big display__div">
             Please select either BNB/MATIC or BUSD!
-          </div>
-        )}
-
-        {cryptoSelectedShow && (
-          <div className="display__div">
-            USD Value: <span className="days__compound">${Number(results * price).toFixed(2)}</span>
           </div>
         )}
 
