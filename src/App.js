@@ -2,8 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import numeral from 'numeral';
 import Moralis from 'moralis-v1';
-import Marquee from "react-fast-marquee";
 import ChartRender from "./ChartRender";
+import MarqueeRender from './Marquee';
 import './App.css';
 
 const serverUrl = "https://tisn7y00c9um.moralisweb3.com:2053/server";
@@ -259,6 +259,9 @@ function App() {
 
   return (
     <div className="App">
+
+      <MarqueeRender />
+
       <header className="App-header" style={{ paddingTop: '30px '}}>
         StableFund Compound Calculator
 
@@ -269,15 +272,6 @@ function App() {
           </div>
         </div>
       </header>
-
-      <Marquee pauseOnHover={true} gradient={false} speed={50}>
-        <div className="display__div__prices">
-          <span className="days__compound" style={{ color: 'lightblue', width: 250 }}><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-97F9D55608-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BNB ${bnbPrice}</span> 
-          <span className="days__compound" style={{ color: 'lightblue', width: 250 }}><img src="https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> MATIC ${maticPrice}</span>
-          <span className="days__compound" style={{ color: 'lightblue', width: 250 }}><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-CD94CC6D31-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BUSD ${busdPrice}</span>
-          <span className="days__compound" style={{ color: 'lightblue', width: 250 }}><img src="https://srockettoken.io/wp-content/uploads/2022/02/Group-97-150x150.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> SROCKET ${stableOne}</span>
-        </div>
-      </Marquee>
 
       <div className="stable__buttons stable__div">
         <header className="stable__text__buttons">

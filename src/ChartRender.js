@@ -4,7 +4,7 @@ import moment from 'moment';
 import axios from 'axios';
 import './App.css';
 
-export default function ChartRender() {
+function ChartRender() {
 
   const [prices, setPrices] = useState([]);
   const [chartDays, setChartDays] = useState(72);
@@ -107,3 +107,5 @@ export default function ChartRender() {
     </>
   )
 }
+
+export default ChartRender
