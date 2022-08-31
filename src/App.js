@@ -3,6 +3,7 @@ import axios from 'axios';
 import numeral from 'numeral';
 import Moralis from 'moralis-v1';
 import Marquee from "react-fast-marquee";
+import ChartRender from "./ChartRender";
 import './App.css';
 
 const serverUrl = "https://tisn7y00c9um.moralisweb3.com:2053/server";
@@ -233,7 +234,9 @@ function App() {
   }
 
   useEffect(() => {
-    Moralis.start({ serverUrl, appId });
+    Moralis.start({ 
+      serverUrl, appId
+    });
     get_prices();
   }, []);
 
@@ -332,7 +335,7 @@ function App() {
             Earnings: <span className="days__compound">{numeral(difference).format('0,0.000000')} {selection}</span>
           </div>
         )}
-        
+
         {cryptoSelectedShow === true && (
           <>
             <div className="display__div"> 
@@ -387,6 +390,8 @@ function App() {
           Gas Prices Coming Soon!
         </div>
       </div>
+
+      <ChartRender />
 
       <div className="stable__div">
         <header className="App-header">
