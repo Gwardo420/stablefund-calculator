@@ -39,7 +39,7 @@ function MarqueeRender() {
 
   return (
     <>
-      <Marquee pauseOnHover={true} gradient={false} speed={50}>
+      <Marquee pauseOnHover={true} gradient={false} speed={120}>
         <div className="display__div__prices">
           <span className="days__compound" style={{ color: 'lightblue', width: 250 }}><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-97F9D55608-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BNB ${bnbPrice}</span> 
           <span className="days__compound" style={{ color: 'lightblue', width: 250 }}><img src="https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> MATIC ${maticPrice}</span>

@@ -44,10 +44,10 @@ function App() {
         </div>
 
         <div className="display__div__text__big">
-          My name is Gwardo420! I am a Front End Developer for a few projects. I created this tool to help the StableFund community calculate how much they would earn if the compound their investment. 
+          My name is Gwardo420! I am a Front end Developer for CluCoin. I created this tool to help the StableFund community calculate how much they would earn if the compound their investment. 
         </div>
 
-        <div onClick={() => window.open("https://www.twitter.com/devgwardo")} style={{ display: 'flex', justifyContent: 'space-evenly', paddingTop: 20 }}>
+        {/* <div onClick={() => window.open("https://www.twitter.com/devgwardo")} style={{ display: 'flex', justifyContent: 'space-evenly', paddingTop: 20 }}>
           <button className="social_tag" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', background: 'transparent', border: 'transparent' }}>
             <img style={{ marginRight: 5 }} height={20} src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-twitter-1.png&r=0&g=0&b=0"></img>
 
@@ -59,7 +59,7 @@ function App() {
 
             GitHub
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

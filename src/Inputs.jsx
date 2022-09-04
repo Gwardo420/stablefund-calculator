@@ -272,6 +272,15 @@ function Inputs() {
       </div>
 
       <div className="amount__div">
+
+        {!chainId && (
+          <>
+            <div style={{ display: 'grid', color: 'yellow', marginBottom: '25px' }}>
+              Please select a chain above before entering your address.
+            </div>
+          </>
+        )}
+
         <header className="stable__text__header">
           Wallet Address
         </header>

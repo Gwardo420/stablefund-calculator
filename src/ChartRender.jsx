@@ -52,46 +52,22 @@ function ChartRender() {
 
   return (
     <> 
-      <div style={{ display: 'grid', marginRight: 'auto', marginLeft: 'auto', maxWidth: '540px', marginTop: '20px', padding: '20px', background: 'linear-gradient(90deg, #192742, #212121)' }}>
-        <div style={{ marginRight: 'auto', marginLeft: 'auto', color: 'white', fontSize: '2em' }}>
+      <div className="display__div__chart">
+        <div style={{ marginRight: 'auto', marginLeft: 'auto', color: 'white', fontSize: '2em', paddingTop: '10px', paddingBottom: '10px' }}>
           {crypto_selection}
         </div>
         
         <Chart options={{ 
-          // fill: { type: 'gradient' },
-          // chart: { background: '#212121', fontFamily: 'monospace', id: 'chart' },
           theme: { mode: 'dark', monochrome: { enabled: true, color: '#FFFFFF' } },
-          // dataLabels: { enabled: false },
           noData: { text: 'Generating Chart...' },
-          // tooltip: { theme: 'dark' },
-          // colors: [ '#FFFFFF' ],
-          xaxis: { labels: { 
+          xaxis: { labels: {
             formatter: function(value) { return moment(value).format('ddd, hA')},
             show: false,
             hideOverlappingLabels: true
           }},
-            yaxis: {
-              labels: {
-                formatter: function(value) {
-                   return Number(value).toFixed(4) 
-                }},
-            show: true 
-            },
-          // responsive: [
-          //     {
-          //       breakpoint: 1000,
-          //       options: {
-          //       plotOptions: {
-          //         bar: {
-          //           horizontal: false
-          //         }
-          //       },
-          //         legend: {
-          //             position: "bottom"
-          //         }
-          //       }
-          //     }
-          //   ]
+          yaxis: { labels: {
+              formatter: function(value) {return Number(value).toFixed(4) }
+            }, show: true },
           }}
           series={[{ name: 'Price', data: prices }]}
           type="line"
