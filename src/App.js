@@ -6,17 +6,7 @@ import ChartRender from "./ChartRender";
 import MarqueeRender from './Marquee';
 import './App.css';
 
-const serverUrl = "https://tisn7y00c9um.moralisweb3.com:2053/server";
-const appId = "3kTUY5dxjjHAN3TxLXcWmnDHzExfTpmJDSZcvCKj";
-
 function App() { 
-
-  useEffect(() => {
-    Moralis.start({ 
-      serverUrl, appId
-    });
-    // get_prices();
-  }, []);
 
   return (
     <div className="App">

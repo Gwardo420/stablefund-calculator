@@ -3,6 +3,9 @@ import axios from 'axios';
 import Moralis from 'moralis-v1';
 import numeral from 'numeral';
 
+const serverUrl = "https://tisn7y00c9um.moralisweb3.com:2053/server";
+const appId = "3kTUY5dxjjHAN3TxLXcWmnDHzExfTpmJDSZcvCKj";
+
 function Inputs() {
   //// COMPOUND LENGTH
   const [days, setDays] = useState(182.5);
@@ -94,8 +97,9 @@ function Inputs() {
   };
 
   const change_compound_time = async (amount) => {
+    console.log(amount)
     setDays(amount)
-    setTimeout(1000)
+    // setTimeout(1000)
   };
 
   async function check_contract(wallet_address) {
@@ -242,6 +246,13 @@ function Inputs() {
     calculateReturns();
   }, [days, compoundTimes, amount, selection]);
 
+  useEffect(() => {
+    get_prices();
+    Moralis.start({
+      serverUrl, appId
+    });
+  }, []);
+
 
   return (
     <>
@@ -258,7 +269,7 @@ function Inputs() {
 
         <div className="stable__text__small" style={{ color: 'red' }}>Matic is currently disabled!</div>
       </div>
-      
+
       <div className="amount__div">
         <header className="stable__text__header">
           Wallet Address
