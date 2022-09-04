@@ -7,6 +7,7 @@ const serverUrl = "https://tisn7y00c9um.moralisweb3.com:2053/server";
 const appId = "3kTUY5dxjjHAN3TxLXcWmnDHzExfTpmJDSZcvCKj";
 
 function Inputs() {
+  
   //// COMPOUND LENGTH
   const [days, setDays] = useState(182.5);
   //// DEPOSIT
@@ -33,6 +34,7 @@ function Inputs() {
   const [chainId, setChainId] = useState("");
   //// USERS WALLET ADDRESS
   const [usersWallet, setUsersWallet] = useState("");
+
   //// COIN PRICES
   const [bnbPrice, setBNBPrice] = useState(0);
   const [maticPrice, setMaticPrice] = useState(0);

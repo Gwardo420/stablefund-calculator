@@ -154,7 +154,8 @@
   margin: 10px;
   margin-left: 5px;
   margin-right: 5px;
-  background: #7e7e7e;
+  background: linear-gradient(125deg, hsla(240, 25%, 39%, 0.5), hsla(0, 0%, 100%, 0.5));
+  background-size: 400% 400%;
   border: transparent;
   color: white;
   display: flex;
@@ -169,7 +170,19 @@
 }
 
 .stable__button:focus {
-  background:rgba(74, 74, 124, 0.5);
+  animation: fade 5s infinite;
+}
+
+@keyframes fade {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes button_hover {
@@ -198,9 +211,9 @@
 .display__div {
   display: flex;
   justify-content: space-between;
-  border-top: 0.125rem white solid;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  /* border-top: 0.125rem white solid; */
+  padding-top: 5px;
+  padding-bottom: 5px;
   min-width: 100%;
   width: 100%;
   max-width: 500px;
