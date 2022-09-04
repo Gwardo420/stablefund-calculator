@@ -156,7 +156,6 @@
   margin-right: 5px;
   background: #7e7e7e;
   border: transparent;
-  /* border-radius: 10px; */
   color: white;
   display: flex;
   align-items: center;
@@ -166,7 +165,25 @@
 .stable__button::before,
 .stable__button:hover {
   color: white;
-  transform: scale(1.1);
+  animation: button_hover 2s infinite;
+}
+
+.stable__button:focus {
+  background:rgba(74, 74, 124, 0.5);
+}
+
+@keyframes button_hover {
+  0% {
+    transform: scale(1.0) translateY(0px);
+  }
+
+  50% {
+    transform: scale(1.0) translateY(-5px);
+  }
+
+  100% {
+    transform: scale(1.0) translateY(0px);
+  }
 }
 
 .display__amount {

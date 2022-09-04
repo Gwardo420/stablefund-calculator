@@ -253,7 +253,6 @@ function Inputs() {
     });
   }, []);
 
-
   return (
     <>
       <div className="stable__buttons stable__div">
