@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import Moralis from 'moralis-v1';
+// import Moralis from 'moralis-v1';
 
 import Inputs from './Inputs';
 import ChartRender from "./ChartRender";
@@ -40,26 +40,12 @@ function App() {
         </header>
 
         <div className="stable_div" style={{ paddingBottom: '20px' }}>
-          <img className="creator_image" style={{ borderRadius: 10, }} src="https://avatars.githubusercontent.com/u/25094504?v=4"></img>
+          <img alt="creator_image" className="creator_image" style={{ borderRadius: 10, }} src="https://avatars.githubusercontent.com/u/25094504?v=4"></img>
         </div>
 
         <div className="display__div__text__big">
           My name is Gwardo420! I am a Front end Developer for CluCoin. I created this tool to help the StableFund community calculate how much they would earn if the compound their investment. 
         </div>
-
-        {/* <div onClick={() => window.open("https://www.twitter.com/devgwardo")} style={{ display: 'flex', justifyContent: 'space-evenly', paddingTop: 20 }}>
-          <button className="social_tag" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', background: 'transparent', border: 'transparent' }}>
-            <img style={{ marginRight: 5 }} height={20} src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-twitter-1.png&r=0&g=0&b=0"></img>
-
-            Twitter
-          </button>
-
-          <button onClick={() => window.open("https://github.com/Gwardo420/stablefund-calculator")} className="social_tag" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', background: 'transparent', border: 'transparent' }}>
-            <img style={{ marginRight: 5 }} height={20} src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-github-1.png&r=0&g=0&b=0"></img>
-
-            GitHub
-          </button>
-        </div> */}
       </div>
     </div>
   );
