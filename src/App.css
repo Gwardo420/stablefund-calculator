@@ -29,12 +29,14 @@
 }
 
 .amount__input {
-  background: #888888;
-  color: white;
+  background: #414141;
+  color: rgb(0, 255, 200);
+  font-weight: 700;
   height: 25px;
   min-width: 300px;
   padding: 5px;
   margin-top: 20px;
+  border: transparent;
   /* border: 0.125rem white solid; */
   /* border-radius: 10px; */
   /* box-shadow: 0 0 2rem black; */
@@ -111,6 +113,7 @@
   min-width: 250px;
   background: rgba(74, 74, 124, 0.5);
   -webkit-appearance: none;
+  height: 25px;
   /* border-radius: 10px; */
   box-shadow: 0 0 0.125rem black;
 }
@@ -142,19 +145,28 @@
   font-size: 1.2em;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  margin-left: auto;
 }
 
 .days__compound__2 {
-  color: rgb(0, 255, 200);
-  text-shadow: 0 0 0.125rem rgb(0, 255, 200);
-  font-weight: bolder;
+  color: white;
+  font-weight: 700;
   font-size: 1.2em;
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1;
-  padding-right: 200px;
+  line-height: 1.5;
+  background:rgb(75, 75, 75);
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-right: 200px;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+
+.days__compound__2::before,
+.days__compound__2:hover {
+  background:rgb(43, 43, 43);
 }
 
 .stable__buttons {
@@ -224,13 +236,10 @@
 .display__div {
   display: flex;
   justify-content: space-between;
-  /* border-top: 0.125rem white solid; */
+  align-items: center;
   padding-top: 5px;
   padding-bottom: 5px;
-  min-width: 100%;
-  width: 100%;
-  max-width: 500px;
-  font-size: 15px;
+  font-size: 20px;
   font-family: 'Darker Grotesque', sans-serif;
 }
 
@@ -320,7 +329,7 @@
 
 .display__div__chart {
   padding: 20px;
-  max-width: 500px;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
 }

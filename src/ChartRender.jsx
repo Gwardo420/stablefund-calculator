@@ -46,6 +46,20 @@ function ChartRender() {
     setPrices(data)
   };
 
+  async function set_chart_days(x) {
+    setChartDays(x)
+  }
+
+  useEffect(() => {
+    if(crypto_selection === 'MATIC') {
+      fetch_matic_price()
+    } else if(crypto_selection === 'SROCKET') {
+      fetch_stable_one_price()
+    } else if(crypto_selection === 'BNB') {
+      fetch_bnb_price()
+    }
+  }, [chartDays])
+
   useEffect(() => {
     fetch_stable_one_price()
   }, [])
@@ -54,31 +68,40 @@ function ChartRender() {
     <> 
       <div className="display__div__chart">
         <div style={{ marginRight: 'auto', marginLeft: 'auto', color: 'white', fontSize: '2em', paddingTop: '10px', paddingBottom: '10px' }}>
-          {crypto_selection}
+          {crypto_selection} ({chartDays} days)
         </div>
         
         <Chart options={{ 
-          theme: { mode: 'dark', monochrome: { enabled: true, color: '#FFFFFF' } },
+          theme: { mode: 'dark', monochrome: { enabled: false, color: '#FFFFFF' } },
           noData: { text: 'Generating Chart...' },
           xaxis: { labels: {
-            formatter: function(value) { return moment(value).format('ddd, hA')},
+            formatter: function(value) { return moment(value).format('MMM D, YYYY')},
             show: false,
-            hideOverlappingLabels: true
+            hideOverlappingLabels: true,
           }},
           yaxis: { labels: {
-              formatter: function(value) {return Number(value).toFixed(4) }
-            }, show: true },
+              formatter: function(value) {return Number(value) }
+            }, show: true, showAlways: false, floating: false, tooltip: false, axisTicks: false },
           }}
           series={[{ name: 'Price', data: prices }]}
-          type="line"
+          type="area"
           height={320}
         />
 
-      <div style={{ marginRight: 'auto', marginLeft: 'auto', color: 'white', marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
-        <button className="stable__button" onClick={() => fetch_bnb_price()}>BNB</button>
-        <button className="stable__button" onClick={() => fetch_matic_price()}>MATIC</button>
-        <button className="stable__button" onClick={() => fetch_stable_one_price()}>SROCKET</button>
-      </div>
+        <div style={{ marginRight: 'auto', marginLeft: 'auto', color: 'white', marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+          <button className="stable__button" onClick={() => fetch_bnb_price()}>BNB</button>
+          <button className="stable__button" onClick={() => fetch_matic_price()}>MATIC</button>
+          <button className="stable__button" onClick={() => fetch_stable_one_price()}>SROCKET</button>
+        </div>
+
+        <div style={{ marginRight: 'auto', marginLeft: 'auto', color: 'white', marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+          <button onClick={() => set_chart_days(1)} className="stable__button">1D</button>
+          <button onClick={() => set_chart_days(7)} className="stable__button">7D</button>
+          <button onClick={() => set_chart_days(30)} className="stable__button">30D</button>
+          <button onClick={() => set_chart_days(60)} className="stable__button">60D</button>
+          <button onClick={() => set_chart_days(90)} className="stable__button">90D</button>
+          <button onClick={() => set_chart_days(120)} className="stable__button">120D</button>
+        </div>
       </div>
     </>
   )

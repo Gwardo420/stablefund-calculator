@@ -40,10 +40,10 @@ function MarqueeRender() {
   return (
     <>
       <Marquee pauseOnHover={true} gradient={false} speed={120}>
-        <div className="days__compound__2"><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-97F9D55608-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BNB ${bnbPrice}</div> 
-        <div className="days__compound__2"><img src="https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> MATIC ${maticPrice}</div>
-        <div className="days__compound__2"><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-CD94CC6D31-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BUSD ${busdPrice}</div>
-        <div className="days__compound__2"><img src="https://srockettoken.io/wp-content/uploads/2022/02/Group-97-150x150.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> SROCKET ${stableOne}</div>
+        <div className="days__compound__2"><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-97F9D55608-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img><span style={{ color: 'lightgrey', fontWeight: '1000', marginRight: '5px' }}>BNB</span> ${Number(bnbPrice).toFixed(2)}</div> 
+        <div className="days__compound__2"><img src="https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> <span style={{ color: 'lightgrey', fontWeight: '1000', marginRight: '5px' }}>MATIC</span> ${maticPrice}</div>
+        <div className="days__compound__2"><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-CD94CC6D31-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> <span style={{ color: 'lightgrey', fontWeight: '1000', marginRight: '5px' }}>BUSD</span> ${busdPrice}</div>
+        <div className="days__compound__2"><img src="https://srockettoken.io/wp-content/uploads/2022/02/Group-97-150x150.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> <span style={{ color: 'lightgrey', fontWeight: '1000', marginRight: '5px' }}>SROCKET</span> ${stableOne}</div>
       </Marquee>
     </>
   )

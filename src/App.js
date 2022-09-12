@@ -27,7 +27,7 @@ function App() {
       <Inputs />
 
       <div className="stable__div">
-        <div className="stable__text__small" style={{ color: 'red' }}>
+        <div className="stable__text__small" style={{ color: 'yellow', fontSize: '20px', fontWeight: 700 }}>
           Gas Prices Coming Soon!
         </div>
       </div>
@@ -43,8 +43,20 @@ function App() {
           <img alt="creator_image" className="creator_image" style={{ borderRadius: 10, }} src="https://avatars.githubusercontent.com/u/25094504?v=4"></img>
         </div>
 
-        <div className="display__div__text__big">
+        <div className="display__div__text__big" style={{ fontSize: '20px' }}>
           My name is Gwardo420! I am a Front end Developer for CluCoin. I created this tool to help the StableFund community calculate how much they would earn if the compound their investment. 
+        </div>
+
+        <hr style={{ width: '100%' }}></hr>
+
+        <div style={{ display: 'grid', color: 'white', fontSize: '20px' }}>
+          <div>
+            Public Donation
+          </div>
+
+          <div>
+            0x8e06e923ba5b7F6c3A167306B4a788B5B12219b8
+          </div>
         </div>
       </div>
     </div>

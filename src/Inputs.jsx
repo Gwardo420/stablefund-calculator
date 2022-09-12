@@ -1,3 +1,5 @@
+import '../src/grid.css';
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Moralis from 'moralis-v1';
@@ -257,120 +259,118 @@ function Inputs() {
 
   return (
     <>
-      <div className="stable__buttons stable__div">
-        <header className="stable__text__buttons">
-          Select a chain
-        </header>
+            
+      {!chainId && (
+        <>
+          <div style={{ display: 'grid', color: 'yellow', marginBottom: '25px', fontSize: '20px', fontWeight: 700 }}>
+            Please select a chain above before entering your address.
+          </div>
+        </>
+      )}
 
-        <div style={{ display: 'flex' }}>
-          <button onClick={() => select_bnb()} className="stable__button"><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-97F9D55608-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BNB</button>
-          <button onClick={() => select_busd()} className="stable__button"><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-CD94CC6D31-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BUSD</button>
-          <button disabled={true} onClick={() => select_matic()} className="stable__button"><img src="https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> MATIC</button>
+      <section className="grid-basic">
+        <div className="amount__div">
+          <header className="stable__text__buttons">
+            Select a chain
+          </header>
+
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <button onClick={() => select_bnb()} className="stable__button"><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-97F9D55608-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BNB</button>
+            <button onClick={() => select_busd()} className="stable__button"><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-CD94CC6D31-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BUSD</button>
+            <button disabled={true} onClick={() => select_matic()} className="stable__button"><img src="https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> MATIC</button>
+          </div>
+
+          <div className="stable__text__small" style={{ color: 'red' }}>Matic is currently disabled!</div>
+
+          <header className="stable__text__header">
+            Wallet Address
+          </header>
+
+          <input disabled={!chainSelected} placeholder="0x24bc3..." onChange={(e) => check_contract(e.target.value)} className="amount__input"></input>
+        
+          <div className="stable__text__small">
+            Enter your StableFund wallet address
+          </div>
         </div>
 
-        <div className="stable__text__small" style={{ color: 'red' }}>Matic is currently disabled!</div>
-      </div>
+        <div className="stable__div">
+          <header className="stable__text">
+            Compound days <span className="days__compound">{days}</span>
+          </header>
 
-      <div className="amount__div">
+          <input min="0" max="365" onChange={(e) => change_compound_time(e.target.value)} className="stable__compound" type={'range'}></input>
+        
+          <div className="stable__text__small">
+            The amount of days you would like to compound.
+          </div>
 
-        {!chainId && (
-          <>
-            <div style={{ display: 'grid', color: 'yellow', marginBottom: '25px' }}>
-              Please select a chain above before entering your address.
+          <header className="stable__text">
+            Compounds per day <span className="days__compound">{compoundTimes}</span>
+          </header>
+
+          <input min="1" max="3" onChange={(e) => setComoundTimes(e.target.value)} className="stable__compound" type={'range'}></input>
+        
+          <div className="stable__text__small">
+            The amount of times you plan to compound in a day.
+          </div>
+        </div>
+
+        <div className="display__amount stable__div">
+          {cryptoSelectedShow === true && (
+            <div className="display__div">
+              Earnings: <span className="days__compound">{numeral(difference).format('0,0.000000')} {selection}</span>
             </div>
-          </>
-        )}
+          )}
 
-        <header className="stable__text__header">
-          Wallet Address
-        </header>
+          {cryptoSelectedShow === true && (
+            <>
+              <div className="display__div"> 
+                Staked: <span className="days__compound">{numeral(Number(amount)).format('0,0.0000')} {selection && (selection)}</span>
+              </div>
 
-        <input disabled={!chainSelected} placeholder="0x24bc3..." onChange={(e) => check_contract(e.target.value)} className="amount__input"></input>
-      
-        <div className="stable__text__small">
-          Enter your StableFund wallet address
-        </div>
-      </div>
+              <div className="display__div">
+                Staked Value: <span className="days__compound">${Number(amount * Number(price)).toFixed(4)} USD</span>
+              </div>
 
-      <div className="stable__div">
-        <header className="stable__text">
-          Compound days <span className="days__compound">{days}</span>
-        </header>
+              <div className="display__div">
+                Compound Total: <span className="days__compound">{numeral(results).format('0,0.0000')} {selection}</span>
+              </div>
 
-        <input min="0" max="365" onChange={(e) => change_compound_time(e.target.value)} className="stable__compound" type={'range'}></input>
-      
-        <div className="stable__text__small">
-          The amount of days you would like to compound.
-        </div>
-      </div>
+              <div className="display__div">
+                Compound Value: <span className="days__compound">${numeral(Number(results * price).toFixed(2)).format('0,0.00')} USD</span>
+              </div>
+            </>
+          )}
 
-      <div className="stable__div">
-        <header className="stable__text">
-          Compounds per day <span className="days__compound">{compoundTimes}</span>
-        </header>
+          {cryptoSelectedShow === false && (
+            <div className="display__div__text__big display__div">
+              Please select either BNB/MATIC or BUSD!
+            </div>
+          )}
 
-        <input min="1" max="3" onChange={(e) => setComoundTimes(e.target.value)} className="stable__compound" type={'range'}></input>
-      
-        <div className="stable__text__small">
-          The amount of times you plan to compound in a day.
-        </div>
-      </div>
+          {selection && (
+            <>
+              <div className="display__div">
+              <span>{selection} Per Day:</span> <span className="days__compound">{perDay}</span>
+              </div>
+            </>
+          )}
 
-      <div className="display__amount stable__div">
-        {cryptoSelectedShow === true && (
+          {cryptoSelectedShow && (
+            <div className="display__div">
+              USD Per Day: <span className="days__compound">${numeral(perDay * price).format('0,0.0000')}</span>
+            </div>
+          )}
+
           <div className="display__div">
-            Earnings: <span className="days__compound">{numeral(difference).format('0,0.000000')} {selection}</span>
+            Days Compounding: <span className="days__compound">{days} Days</span>
           </div>
-        )}
 
-        {cryptoSelectedShow === true && (
-          <>
-            <div className="display__div"> 
-              Staked: <span className="days__compound">{numeral(Number(amount)).format('0,0.0000')} {selection && (selection)}</span>
-            </div>
-
-            <div className="display__div">
-              Staked Value: <span className="days__compound">${Number(amount * Number(price)).toFixed(4)} USD</span>
-            </div>
-
-            <div className="display__div">
-              Compound Total: <span className="days__compound">{numeral(results).format('0,0.0000')} {selection}</span>
-            </div>
-
-            <div className="display__div">
-              Compound Value: <span className="days__compound">${numeral(Number(results * price).toFixed(2)).format('0,0.00')} USD</span>
-            </div>
-          </>
-        )}
-
-        {cryptoSelectedShow === false && (
-          <div className="display__div__text__big display__div">
-            Please select either BNB/MATIC or BUSD!
-          </div>
-        )}
-
-        {selection && (
-          <>
-            <div className="display__div">
-            <span>{selection} Per Day:</span> <span className="days__compound">{perDay}</span>
-            </div>
-          </>
-        )}
-
-        {cryptoSelectedShow && (
           <div className="display__div">
-            USD Per Day: <span className="days__compound">${numeral(perDay * price).format('0,0.0000')}</span>
+            Compound Interval: <div className="days__compound">{interval} hours</div>
           </div>
-        )}
-
-        <div className="display__div">
-          Days Compounding: <span className="days__compound">{days} Days</span>
         </div>
-
-        <div className="display__div">
-          Compound Interval: <div className="days__compound">{interval} hours</div>
-        </div>
-      </div>
+      </section>
     </>
   )
 }
