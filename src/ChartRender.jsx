@@ -80,8 +80,8 @@ function ChartRender() {
             hideOverlappingLabels: true,
           }},
           yaxis: { labels: {
-              formatter: function(value) {return Number(value) }
-            }, show: true, showAlways: false, floating: false, tooltip: false, axisTicks: false },
+              formatter: function(value) { return '$' + Number(value) }
+            }, show: false, showAlways: false, floating: false, tooltip: false, axisTicks: false, crosshairs: false },
           }}
           series={[{ name: 'Price', data: prices }]}
           type="area"
