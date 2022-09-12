@@ -272,6 +272,14 @@ function Inputs() {
         {Number(amount) + ' initial deposit ' + ' x ' + (1 + ' + ' + 0.01455 + ' x ' + Number(compoundTimes)) + ' compounds ' + ' ^ ' + Number(days) + ' days'}
       </div>
 
+      {cryptoSelectedShow === true && (
+        <>
+          <div style={{ display: 'flex', justifyContent: 'center', color: 'rgb(0, 255, 213)', fontSize: '20px' }}>
+            ~ <span>{numeral(results).format('0,0.0000')} {selection}</span> (+<span>{numeral(difference).format('0,0.000000')} {selection}</span>)
+          </div>
+        </>
+      )}
+
       <section className="grid-basic">
         <div className="amount__div">
           <header className="stable__text__buttons">
