@@ -39,6 +39,8 @@ function Inputs() {
   const [usersWallet, setUsersWallet] = useState("");
   //// USD VALUE
   const [usdValue, setUSDValue] = useState(0);
+  //// Reward Claimable
+  const [claimable, setClaimable] = useState(0);
 
   //// COIN PRICES
   const [bnbPrice, setBNBPrice] = useState(0);
@@ -171,6 +173,26 @@ function Inputs() {
         "stateMutability": "view",
         "type": "function"
       }];
+
+      const rewardABI = [{
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "_investor",
+            "type": "address"
+          }
+        ],
+        "name": "getAllClaimableReward",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },]
   
       const options = {
         chain: chainId.toString(),
@@ -181,7 +203,17 @@ function Inputs() {
       };
       const allowance = await Moralis.Web3API.native.runContractFunction(options);
       const investorAmount = await allowance['totalLocked'];
-      await setAmount(investorAmount / Math.pow(10, 18));
+      setAmount(investorAmount / Math.pow(10, 18));
+
+      const optionsReward = {
+        chain: chainId.toString(),
+        address: "0xfBbc24CA5518898fAe0d8455Cb265FaAA66157C9",
+        function_name: "getAllClaimableReward",
+        abi: rewardABI,
+        params: { "_investor": wallet.toString() },
+      };
+      const reward = await Moralis.Web3API.native.runContractFunction(optionsReward);
+      setClaimable(reward / Math.pow(10, 18));
     } catch(err) {
       console.log(err);
     }
@@ -236,6 +268,26 @@ function Inputs() {
         "stateMutability": "view",
         "type": "function"
       }];
+
+      const rewardABI = [{
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "_investorAddress",
+            "type": "address"
+          }
+        ],
+        "name": "getAllClaimableReward",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "allClaimableAmount",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }];
   
       const options = {
         chain: chainId.toString(),
@@ -247,6 +299,17 @@ function Inputs() {
       const allowance = await Moralis.Web3API.native.runContractFunction(options);
       const investorAmount = await allowance['totalLocked'];
       await setAmount(investorAmount / Math.pow(10, 18))
+
+      const rewardOptions = {
+        chain: chainId.toString(),
+        address: "0x4F2bC1d99C953e0053F5bb9A6855CF7A5CBe66Fa",
+        function_name: "getAllClaimableReward",
+        abi: rewardABI,
+        params: { "_investorAddress": wallet.toString() },
+      };
+      const reward = await Moralis.Web3API.native.runContractFunction(rewardOptions)
+      console.log()
+      setClaimable(reward / Math.pow(10, 18))
     } catch(err) {
       console.log(err)
     }
@@ -316,6 +379,13 @@ function Inputs() {
           <div style={{ display: 'flex', justifyContent: 'center', color: 'rgb(0, 255, 213)', fontSize: '25px', fontWeight: 'bold', borderTop: '1px solid white', maxWidth: 300, marginLeft: 'auto', marginRight: 'auto' }}>
             <div>
               $<AnimatedNumber value={usdValue} formatValue={(value) => `${numeral(Number(value.toFixed(2))).format('0,0.00')}`}></AnimatedNumber> <span style={{ marginLeft: '5px' }}>USD</span>
+            </div>
+          </div>
+
+          <div style={{ textAlign: 'left', color: 'white', maxWidth: 300, marginLeft: 'auto', marginRight: 'auto' }}>Claimable value</div>
+          <div style={{ display: 'flex', justifyContent: 'center', color: 'rgb(0, 255, 213)', fontSize: '25px', fontWeight: 'bold', borderTop: '1px solid white', maxWidth: 300, marginLeft: 'auto', marginRight: 'auto' }}>
+            <div>
+              <AnimatedNumber value={claimable} formatValue={(value) => `${numeral(Number(value.toFixed(4))).format('0,0.0000')}`}></AnimatedNumber> <span style={{ marginLeft: '5px' }}>{selection}</span>
             </div>
           </div>
         </>
