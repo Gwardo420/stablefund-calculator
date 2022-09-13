@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Moralis from 'moralis-v1';
 import numeral from 'numeral';
+import AnimatedNumber from "animated-number-react";
 
 const serverUrl = "https://tisn7y00c9um.moralisweb3.com:2053/server";
 const appId = "3kTUY5dxjjHAN3TxLXcWmnDHzExfTpmJDSZcvCKj";
@@ -36,6 +37,8 @@ function Inputs() {
   const [chainId, setChainId] = useState("");
   //// USERS WALLET ADDRESS
   const [usersWallet, setUsersWallet] = useState("");
+  //// USD VALUE
+  const [usdValue, setUSDValue] = useState(0);
 
   //// COIN PRICES
   const [bnbPrice, setBNBPrice] = useState(0);
@@ -66,15 +69,22 @@ function Inputs() {
   }
   
   async function select_bnb() {
-    cryptoSelected(true)
-    cryptoSelection("BNB");
-    setPrice(bnbPrice);
-    setChainSelected(true);
-    setChainId("bsc");
+    setAmount(0)
+    await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd').then(async (coin_gecko_results) => {
+      await setPrice(coin_gecko_results.data.binancecoin.usd)
+      await cryptoSelected(true);
+      await cryptoSelection("BNB");
+      await setChainSelected(true);
+      await setChainId("bsc");
+
+      if(usersWallet) {
+        await check_bnb(usersWallet);
+      }
+    })
   }
 
   async function select_matic() {
-    cryptoSelected(true)
+    cryptoSelected(true);
     cryptoSelection("MATIC");
     setPrice(maticPrice);
     setChainSelected(true);
@@ -82,11 +92,18 @@ function Inputs() {
   }
 
   async function select_busd() {
-    cryptoSelected(true)
-    cryptoSelection("BUSD");
-    setPrice(busdPrice);
-    setChainSelected(true);
-    setChainId("bsc");
+    setAmount(0)
+    await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=binance-usd&vs_currencies=usd').then(async (coin_gecko_results) => {
+      await setPrice(coin_gecko_results.data['binance-usd'].usd)
+      await cryptoSelected(true);
+      await cryptoSelection("BUSD");
+      await setChainSelected(true);
+      await setChainId("bsc");
+
+      if(usersWallet) {
+        await check_busd(usersWallet);
+      }
+    })
   }
 
 
@@ -103,133 +120,143 @@ function Inputs() {
   const change_compound_time = async (amount) => {
     console.log(amount)
     setDays(amount)
-    // setTimeout(1000)
   };
 
+  async function check_busd(wallet) {
+    if(!wallet)return console.log("There was no wallet address!");
+    if(wallet.length !== 42)return console.log("The wallet address was not big enough!");
+    await setUsersWallet(wallet)
+    try {
+      const ABI =  [{
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "name": "investors",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "investor",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalLocked",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastCalculationDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "claimableAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "claimedAmount",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }];
+  
+      const options = {
+        chain: chainId.toString(),
+        address: "0xfBbc24CA5518898fAe0d8455Cb265FaAA66157C9",
+        function_name: "investors",
+        abi: ABI,
+        params: { "": wallet.toString() },
+      };
+      const allowance = await Moralis.Web3API.native.runContractFunction(options);
+      const investorAmount = await allowance['totalLocked'];
+      await setAmount(investorAmount / Math.pow(10, 18));
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  async function check_bnb(wallet) {
+    if(!wallet)return console.log("There was no wallet address!");
+    if(wallet.length !== 42)return console.log("The wallet address was not big enough!");
+    await setUsersWallet(wallet)
+    try {
+      const ABI =  [  {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "name": "investors",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "investor",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalLocked",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastCalculationDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "claimableAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "claimedAmount",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }];
+  
+      const options = {
+        chain: chainId.toString(),
+        address: "0x4F2bC1d99C953e0053F5bb9A6855CF7A5CBe66Fa",
+        function_name: "investors",
+        abi: ABI,
+        params: { "": wallet.toString() },
+      };
+      const allowance = await Moralis.Web3API.native.runContractFunction(options);
+      const investorAmount = await allowance['totalLocked'];
+      await setAmount(investorAmount / Math.pow(10, 18))
+    } catch(err) {
+      console.log(err)
+    }
+  }
+
   async function check_contract(wallet_address) {
-    if(!wallet_address)return;
-    if(wallet_address.length !== 42)return;
-    setUsersWallet(wallet_address)
-    if(chainId === "bsc" && selection === "BUSD") { 
-      try {
-        const ABI =  [{
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-            }
-          ],
-          "name": "investors",
-          "outputs": [
-            {
-              "internalType": "address",
-              "name": "investor",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "totalLocked",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "startTime",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "lastCalculationDate",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "claimableAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "claimedAmount",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        }];
-    
-        const options = {
-          chain: chainId.toString(),
-          address: "0xfBbc24CA5518898fAe0d8455Cb265FaAA66157C9",
-          function_name: "investors",
-          abi: ABI,
-          params: { "": wallet_address.toString() },
-        };
-        const allowance = await Moralis.Web3API.native.runContractFunction(options);
-        const investorAmount = await allowance['totalLocked'];
-        setAmount(investorAmount / Math.pow(10, 18));
-      } catch(err) {
-        console.log(err);
-      }
-    } else if(chainId === "bsc" && selection === "BNB") {  
-      try {
-        const ABI =  [  {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-            }
-          ],
-          "name": "investors",
-          "outputs": [
-            {
-              "internalType": "address",
-              "name": "investor",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "totalLocked",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "startTime",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "lastCalculationDate",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "claimableAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "claimedAmount",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function"
-        }];
-    
-        const options = {
-          chain: chainId.toString(),
-          address: "0x4F2bC1d99C953e0053F5bb9A6855CF7A5CBe66Fa",
-          function_name: "investors",
-          abi: ABI,
-          params: { "": wallet_address.toString() },
-        };
-        const allowance = await Moralis.Web3API.native.runContractFunction(options);
-        const investorAmount = await allowance['totalLocked'];
-        setAmount(investorAmount / Math.pow(10, 18))
-      } catch(err) {
-        console.log(err)
-      }
+    if(await chainId.toLowerCase() === "bsc" && await selection.toUpperCase() === "BUSD") { 
+      check_busd(wallet_address)
+    } else if(await chainId.toLowerCase() === "bsc" && await selection.toUpperCase() === "BNB") {  
+      check_bnb(wallet_address)
     }
   }
 
@@ -240,12 +267,17 @@ function Inputs() {
       const results = Number(amount) * (1 + 0.01455 * Number(compoundTimes)) ** Number(days);
       const per_day = 0.015 * Number(results);
       const difference = Number(results) - Number(amount);
+      const usdValues = Number(results) * Number(price);
 
-      setResults(Number(results).toFixed(6));
+      console.log("USD Values")
+      console.log(usdValues)
+
+      setResults(results);
       setDifference(difference.toFixed(6));
+      setUSDValue(usdValues.toFixed(4));
       setPerDay(numeral(per_day).format('0,0.0000'));
       setInterval(24 / compoundTimes);
-      selection_update(selection.toString());
+      // selection_update(selection.toString());
     }
     calculateReturns();
   }, [days, compoundTimes, amount, selection]);
@@ -259,23 +291,32 @@ function Inputs() {
 
   return (
     <>
-            
-      {!chainId && (
-        <>
-          <div style={{ display: 'grid', color: 'yellow', marginBottom: '25px', fontSize: '20px', fontWeight: 700 }}>
-            Please select a chain above before entering your address.
-          </div>
-        </>
-      )}
-
-      <div style={{ color: 'white', fontSize: '20px' }}>
-        {Number(amount) + ' initial deposit ' + ' x ' + (1 + ' + ' + 0.01455 + ' x ' + Number(compoundTimes)) + ' compounds ' + ' ^ ' + Number(days) + ' days'}
+          
+      <div style={{ color: 'white', fontSize: '20px', padding: '10px' }}>
+        {Number(amount).toFixed(4) + ' initial deposit ' + ' x ' + (1 + ' + ' + 0.01455 + ' x ' + Number(compoundTimes)) + ' compounds ' + ' ^ ' + Number(days) + ' days'}
       </div>
 
       {cryptoSelectedShow === true && (
         <>
-          <div style={{ display: 'flex', justifyContent: 'center', color: 'rgb(0, 255, 213)', fontSize: '20px' }}>
-            ~ <span>{numeral(results).format('0,0.0000')} {selection}</span> (+<span>{numeral(difference).format('0,0.000000')} {selection}</span>)
+          <div style={{ textAlign: 'left', color: 'white', maxWidth: 300, marginLeft: 'auto', marginRight: 'auto' }}>Compound total</div>
+          <div style={{ display: 'flex', justifyContent: 'center', color: 'rgb(0, 255, 213)', fontSize: '25px', fontWeight: 'bold', borderTop: '1px solid white', maxWidth: 300, marginLeft: 'auto', marginRight: 'auto' }}>
+            <div>
+              ~<AnimatedNumber value={results} formatValue={(value) => `${numeral(Number(value.toFixed(2))).format('0,0.00')}`}></AnimatedNumber> <span style={{ marginLeft: '5px' }}>{selection}</span>
+            </div>
+          </div>
+
+          <div style={{ textAlign: 'left', color: 'white', maxWidth: 300, marginLeft: 'auto', marginRight: 'auto' }}>Compound earnings</div>
+          <div style={{ display: 'flex', justifyContent: 'center', color: 'rgb(0, 255, 213)', fontSize: '25px', fontWeight: 'bold', borderTop: '1px solid white', maxWidth: 300, marginLeft: 'auto', marginRight: 'auto' }}>
+            <div>
+            +<AnimatedNumber value={difference} formatValue={(value) => `${numeral(Number(value.toFixed(2))).format('0,0.00')}`}></AnimatedNumber> <span style={{ marginLeft: '5px' }}>{selection}</span>
+            </div>
+          </div>
+
+          <div style={{ textAlign: 'left', color: 'white', maxWidth: 300, marginLeft: 'auto', marginRight: 'auto' }}>Market/USD value</div>
+          <div style={{ display: 'flex', justifyContent: 'center', color: 'rgb(0, 255, 213)', fontSize: '25px', fontWeight: 'bold', borderTop: '1px solid white', maxWidth: 300, marginLeft: 'auto', marginRight: 'auto' }}>
+            <div>
+              $<AnimatedNumber value={usdValue} formatValue={(value) => `${numeral(Number(value.toFixed(2))).format('0,0.00')}`}></AnimatedNumber> <span style={{ marginLeft: '5px' }}>USD</span>
+            </div>
           </div>
         </>
       )}
@@ -289,10 +330,16 @@ function Inputs() {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <button onClick={() => select_bnb()} className="stable__button"><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-97F9D55608-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BNB</button>
             <button onClick={() => select_busd()} className="stable__button"><img src="https://seeklogo.com/images/B/binance-coin-bnb-logo-CD94CC6D31-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> BUSD</button>
-            <button disabled={true} onClick={() => select_matic()} className="stable__button"><img src="https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> MATIC</button>
+            {/* <button disabled={true} onClick={() => select_matic()} className="stable__button"><img src="https://seeklogo.com/images/P/polygon-matic-logo-1DFDA3A3A8-seeklogo.com.png" height={20} width={20} style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: '5px' }}></img> MATIC</button> */}
           </div>
 
-          <div className="stable__text__small" style={{ color: 'red' }}>Matic is currently disabled!</div>
+          {!chainId && (
+            <>
+              <div style={{ display: 'grid', color: 'yellow', marginBottom: '25px', fontSize: '20px', fontWeight: 700 }}>
+                Please select a chain above before entering your address.
+              </div>
+            </>
+          )}
 
           <header className="stable__text__header">
             Wallet Address
@@ -326,8 +373,10 @@ function Inputs() {
             The amount of times you plan to compound in a day.
           </div>
         </div>
+        
+        </section>
 
-        <div className="display__amount stable__div">
+        <div className="display__amount">
           {cryptoSelectedShow === true && (
             <div className="display__div">
               Earnings: <span className="days__compound">{numeral(difference).format('0,0.000000')} {selection}</span>
@@ -354,12 +403,6 @@ function Inputs() {
             </>
           )}
 
-          {cryptoSelectedShow === false && (
-            <div className="display__div__text__big display__div">
-              Please select either BNB/MATIC or BUSD!
-            </div>
-          )}
-
           {selection && (
             <>
               <div className="display__div">
@@ -382,7 +425,6 @@ function Inputs() {
             Compound Interval: <div className="days__compound">{interval} hours</div>
           </div>
         </div>
-      </section>
     </>
   )
 }
