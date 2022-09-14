@@ -71,17 +71,47 @@ function ChartRender() {
           {crypto_selection} ({chartDays} days)
         </div>
         
-        <Chart options={{ 
-          theme: { mode: 'dark', monochrome: { enabled: false, color: '#FFFFFF' } },
-          noData: { text: 'Generating Chart...' },
-          xaxis: { labels: {
-            formatter: function(value) { return moment(value).format('MMM D, YYYY')},
-            show: false,
-            hideOverlappingLabels: true,
-          }},
-          yaxis: { labels: {
-              formatter: function(value) { return '$' + Number(value) }
-            }, show: false, showAlways: false, floating: false, tooltip: false, axisTicks: false, crosshairs: false },
+        <Chart 
+          options={{ 
+            chart: {
+              zoom: {
+                autoScaleYaxis: true,
+              },
+            },
+            theme: { mode: 'dark', monochrome: { enabled: false, color: '#FFFFFF' } },
+            noData: { text: 'Generating Chart...' },
+            xaxis: {
+              labels: {
+                formatter: function(value) { return moment(value).format('MMM D, YY')},
+              },
+              tickAmount: 6
+            },
+            dataLabels: {
+              enabled: false
+            },
+            yaxis: {
+              labels: {
+                formatter: function(value) { return '$' + Number(value).toFixed(4) },
+              }, 
+              show: false,
+              showAlways: false,
+              floating: false, 
+              tooltip: false, 
+              axisTicks: false, 
+              crosshairs: false,
+            },
+            stroke: {
+              curve: 'smooth'
+            },
+            fill: {
+              type: 'gradient',
+              gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.7,
+                opacityTo: 0.9,
+                stops: [0, 100]
+              }
+            },
           }}
           series={[{ name: 'Price', data: prices }]}
           type="area"
